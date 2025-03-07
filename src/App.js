@@ -1,8 +1,13 @@
-function App() {
+import Header from "./components/Header";  
+import Product from "./components/Product";
+
+function App(props) {
   return (
-    <div>
-      <h1>Hello World</h1>
-    </div>
+    <>
+      <Header />
+      <Product />  
+    </>
   );
 }
+
 export default App;
