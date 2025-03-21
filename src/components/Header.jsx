@@ -10,7 +10,6 @@ export default function Header() {
           <Link to="/">Home</Link>
           <Link to="/login">Login</Link>
           <Link to="/cart">Cart</Link>
-          <Link to="/products">Products</Link>
         </div>
       </div>
     </div>
