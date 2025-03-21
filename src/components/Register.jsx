@@ -8,8 +8,14 @@ export default function Register() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setUsers((prevUsers) => [...prevUsers, user]);
-    setUser({ name: "", email: "", password: "" }); // Reset input fields
+  const userExists = users.some((u) => u.email === user.email);
+
+    if (userExists) {
+      alert("User already exists!"); // Show popup alert
+    } else {
+      setUsers((prevUsers) => [...prevUsers, user]);
+      setUser({ name: "", email: "", password: "" }); // Reset input fields
+    }
   };
 
   const removeUser = (index) => {
