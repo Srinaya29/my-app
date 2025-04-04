@@ -1,75 +1,67 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { useState } from "react";
 import "./Register.css";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { appContext } from "../App";
 export default function Register() {
-  const [users, setUsers] = useState([]);
-  const [user, setUser] = useState({ name: "", email: "", password: "" });
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  const userExists = users.some((u) => u.email === user.email);
-
-    if (userExists) {
-      alert("User already exists!"); // Show popup alert
+  const { user, setUser, users, setUsers } = useContext(appContext);
+  const [msg, setMsg] = useState();
+  const Navigate = useNavigate();
+  const handleSubmit = () => {
+    const found = users.find((value) => value.email === user.email);
+    if (found) {
+      setMsg("User already exists");
     } else {
-      setUsers((prevUsers) => [...prevUsers, user]);
-      setUser({ name: "", email: "", password: "" }); // Reset input fields
+      setUsers([...users, user]);
+      setMsg();
+      Navigate("/");
     }
   };
-
-  const removeUser = (index) => {
-    setUsers(users.filter((_, i) => i !== index));
+  const handleDelete = (email) => {
+    setUsers(users.filter((value) => value.email != email));
   };
-
   return (
     <div className="App-Register-Row">
       <div>
         <h2>Registration Form</h2>
-        <form onSubmit={handleSubmit}>
-          <p>
-            <input
-              type="text"
-              placeholder="Enter name"
-              value={user.name}
-              onChange={(e) => setUser((prev) => ({ ...prev, name: e.target.value }))}
-            />
-          </p>
-          <p>
-            <input
-              type="text"
-              placeholder="Email address"
-              value={user.email}
-              onChange={(e) => setUser((prev) => ({ ...prev, email: e.target.value }))}
-            />
-          </p>
-          <p>
-            <input
-              type="password"
-              placeholder="New password"
-              value={user.password}
-              onChange={(e) => setUser((prev) => ({ ...prev, password: e.target.value }))}
-            />
-          </p>
-          <p>
-            <button type="submit">Submit</button>
-          </p>
-        </form>
+        {msg}
+        <p>
+          <input
+            type="text"
+            placeholder="Enter name"
+            onChange={(e) => setUser({ ...user, name: e.target.value })}
+          ></input>
+        </p>
+        <p>
+          <input
+            type="text"
+            placeholder="Email address"
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+          ></input>
+        </p>
+        <p>
+          <input
+            type="password"
+            placeholder="New password"
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
+          ></input>
+        </p>
+        <p>
+          <button onClick={handleSubmit}>Submit</button>
+        </p>
         <p>
           <Link to="../login">Already a member? Log In</Link>
         </p>
       </div>
-
       <div>
-        <h2>Registered Users</h2>
-        <ul>
-          {users.map((value, index) => (
-            <li key={index}>
-              {value.name} - {value.email} - {value.password}  
-              <button onClick={() => removeUser(index)}>Remove</button>
+        {users &&
+          users.map((value, index) => (
+            <li>
+              {value.name}-{value.email}-{value.password}
+              <button onClick={() => handleDelete(value.email)}>Delete</button>
             </li>
           ))}
-        </ul>
       </div>
     </div>
   );
